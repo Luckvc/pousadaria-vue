@@ -10,6 +10,9 @@
         <h1>Pousadaria</h1>
         <button v-on:click="getInnIndex">Fetch</button>
         <input type="text" v-model="searchText" placeholder="Buscar">
+        <div v-if="listResult.length <= 0">
+            Nenhuma pousada encontrada
+        </div>
 
         <ul>
             <li v-for="item in listResult">
