@@ -8,7 +8,21 @@
 <body>
     <div id="app">
         <h1>Pousadaria</h1>
-        <button v-on:click="getData">Fetch</button>
+        <button v-on:click="getInnIndex">Fetch</button>
+        <input type="text" v-model="searchText" placeholder="Buscar">
+
+        <ul>
+            <li v-for="item in innList">
+                <address>
+                    {{ item.name }} <br>
+                    {{ item.address.city }} - {{ item.address.state }}
+                </address>
+                <br>
+            </li>
+        </ul>
+
+
+
     </div>
     <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
     <script src="main.js"></script>
