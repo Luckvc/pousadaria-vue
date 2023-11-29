@@ -12,7 +12,7 @@
         <input type="text" v-model="searchText" placeholder="Buscar">
 
         <ul>
-            <li v-for="item in innList">
+            <li v-for="item in listResult">
                 <address>
                     {{ item.name }} <br>
                     {{ item.address.city }} - {{ item.address.state }}

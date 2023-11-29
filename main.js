@@ -5,6 +5,20 @@ const app = Vue.createApp({
             innList: []
         }
     },
+
+    computed:{
+        listResult(){
+            if (this.searchText){
+                return this.innList.filter(inn => {
+                    return inn.name.toLowerCase().includes(this.searchText.toLowerCase());
+                });
+            }else{
+                return this.innList
+            }
+        }
+    },
+
+
     methods:{
         async getInnIndex(){
             let response = await fetch('http://localhost:3000/api/v1/inns');
