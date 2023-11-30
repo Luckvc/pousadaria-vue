@@ -26,10 +26,6 @@
             </ul>
         </div>
         <div v-show="page == 'innShow'">
-            <div v-if="listResult.length <= 0">
-                Nenhuma pousada encontrada
-            </div>
-
             <h2>{{ inn["name"] }}</h2><br>
             <h3>Dados da Pousada</h3>
             <dl>
@@ -61,6 +57,29 @@
                 <dt>Meios de Pagamento:</dt>
                 <dd v-for="item in innPaymentMethods">{{ item }}</dd>
             </dl>
+            <h3>Quartos</h3>
+            <div>
+                <dl v-for="item in roomList">
+                    <dd><strong>Quarto {{ item.number }}</strong></dd>
+                    <dt>Descrição:</dt>
+                    <dd>{{ item.description }}</dd>
+                    <dt>Capacidade:</dt>
+                    <dd>{{ item.capacity }} Hóspedes</dd>
+                    <dt>Dimensão:</dt>
+                    <dd>{{ item.dimension }} m²</dd>
+                    <dt>Banheiros:</dt>
+                    <dd v-if="item.bathrooms == 0"> Banheiro compartilhado </dd>
+                    <dd v-if="item.bathrooms > 0"> {{ item.bathrooms }} </dd>
+                    <dt>Camas:</dt>
+                    <dd v-if="item.double_beds > 0"> {{ item.double_beds }} de Casal </dd>
+                    <dd v-if="item.single_beds > 0"> {{ item.single_beds }} de Solteiro </dd>
+                    <dt>Amenidades:</dt> 
+                    <dd v-for="amenity in item.amenities">{{ amenity }}</dd>
+                    <dt>Acessível para PCD:</dt> 
+                    <dd>{{ item.accessible }} </dd>
+                    <dd></dd>
+                </dl>
+            </div>
         </div>
     </div>
     <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>

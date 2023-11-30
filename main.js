@@ -3,11 +3,16 @@ const app = Vue.createApp({
         return{
             searchText: '',
             page: 'innIndex',
+
             innList: [],
             inn: new Object(),
             address: new Object(),
             innPaymentMethods: [],
-            innPets: false
+            innPets: false,
+
+            room: new Object(),
+            roomAccessible: false,
+            roomList: [],
         }
     },
 
@@ -54,7 +59,7 @@ const app = Vue.createApp({
         async getInnShow(id){
             let response = await fetch(`http://localhost:3000/api/v1/inns/${id}`);
             let data = await response.json();
-            
+
             if (data.score == 0) data.score = 'Sem Avaliações';
             this.inn = data
             this.address = data.address
@@ -66,9 +71,40 @@ const app = Vue.createApp({
             if (data.credit) this.innPaymentMethods.push("Cartão de Crédito");
             if (data.debit) this.innPaymentMethods.push("Cartão de Débito");
 
-            this.page = 'innShow';
+            this.getRooms(id)
 
-        }
+            this.page = 'innShow';
+        },
+        async getRooms(id){
+            let response = await fetch(`http://localhost:3000/api/v1/inns/${id}/rooms`);
+            let data = await response.json();
+
+            console.log(data)
+            data.forEach(item =>{
+                var room = new Object();
+
+                room.id = item.id;
+                room.number = item.number;
+                room.capacity = item.capacity;
+                room.description = item.description;
+                room.dimension = item.dimension;
+                room.bathrooms = item.bathrooms;
+                room.double_beds = item.double_beds;
+                room.single_beds = item.single_beds;
+
+                item.accessible ? room.accessible = "Sim" : room.accessible = "Não";
+
+                room.amenities = [];
+                if (item.kitchen) room.amenities.push("Cozinha");
+                if (item.balcony) room.amenities.push("Varanda");
+                if (item.air) room.amenities.push("Ar Condicionado");
+                if (item.tv) room.amenities.push("TV");
+                if (item.wardrobe) room.amenities.push("Guarda-Roupas");
+                if (item.safe) room.amenities.push("Cofre"); 
+
+                this.roomList.push(room)
+            }) 
+        },
     }
 
 })
