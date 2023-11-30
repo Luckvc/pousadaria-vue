@@ -6,26 +6,62 @@
     <title>Pousadaria</title>
 </head>
 <body>
+    <h1>Pousadaria</h1>
     <div id="app">
-        <h1>Pousadaria</h1>
-        <button v-on:click="getInnIndex">Fetch</button>
-        <input type="text" v-model="searchText" placeholder="Buscar">
-        <div v-if="listResult.length <= 0">
-            Nenhuma pousada encontrada
+        <div v-show="page == 'innIndex'">
+            <input type="text" v-model="searchText" placeholder="Buscar">
+            <div v-if="listResult.length <= 0">
+                Nenhuma pousada encontrada
+            </div>
+            <ul>
+                <li v-for="item in listResult">
+                    <address>
+                        <a href="#" v-on:click="getInnShow(item.id)">
+                            <strong>{{ item.name }} </strong><br>
+                        </a>
+                        {{ item.address.city }} - {{ item.address.state }}
+                    </address>
+                    <br>
+                </li>
+            </ul>
         </div>
+        <div v-show="page == 'innShow'">
+            <div v-if="listResult.length <= 0">
+                Nenhuma pousada encontrada
+            </div>
 
-        <ul>
-            <li v-for="item in listResult">
-                <address>
-                    {{ item.name }} <br>
-                    {{ item.address.city }} - {{ item.address.state }}
-                </address>
-                <br>
-            </li>
-        </ul>
-
-
-
+            <h2>{{ inn["name"] }}</h2><br>
+            <h3>Dados da Pousada</h3>
+            <dl>
+                <dt>Nome:</dt>
+                <dd>{{ inn["name"] }}</dd>
+                <dt>Telefone:</dt>
+                <dd>{{ inn["phone"] }}</dd>
+                <dt>E-mail:</dt>
+                <dd>{{ inn["email"] }}</dd>
+                <dt>Endereço:</dt>
+                <dd>{{ address["street"] }}, {{ address["number"] }} - 
+                    {{ address["neighborhood"] }}, {{ address["city"] }} - 
+                    {{ address["state"] }}</dd>
+                <dt>CEP:</dt>
+                <dd>{{ inn["cep"] }}</dd>
+            </dl>
+            <h3>Informações da Pousada</h3>
+            <dl>
+                <dt>Avaliações:</dt>
+                <dd>{{ inn["score"] }}</dd>
+                <dt>Políticas:</dt>
+                <dd>{{ inn["policies"] }}</dd>
+                <dt>Aceita pets:</dt>
+                <dd>{{ innPets }}</dd>
+                <dt>Horário de Check-in:</dt>
+                <dd>{{ inn["check_in_time"] }}</dd>
+                <dt>Horário de Check-out:</dt>
+                <dd>{{ inn["check_out_time"] }}</dd>
+                <dt>Meios de Pagamento:</dt>
+                <dd v-for="item in innPaymentMethods">{{ item }}</dd>
+            </dl>
+        </div>
     </div>
     <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
     <script src="main.js"></script>

@@ -2,7 +2,12 @@ const app = Vue.createApp({
     data(){
         return{
             searchText: '',
-            innList: []
+            page: 'innIndex',
+            innList: [],
+            inn: new Object(),
+            address: new Object(),
+            innPaymentMethods: [],
+            innPets: false
         }
     },
 
@@ -18,12 +23,14 @@ const app = Vue.createApp({
         }
     },
 
+    async mounted(){
+        this.listResult = await this.getInnIndex();
+    },
 
     methods:{
         async getInnIndex(){
             let response = await fetch('http://localhost:3000/api/v1/inns');
             let data = await response.json();
-            console.log(data);
 
             this.innList = []
 
@@ -33,29 +40,34 @@ const app = Vue.createApp({
 
                 inn.id = item.id;
                 inn.name = item.name;
-                inn.email = item.email;
-                inn.phone = item.phone;
-                inn.pets = item.pets;
-                inn.policies = item.policies;
-                inn.check_in_time = item.checkInTime;
-                inn.check_out_time = item.checkOutTime;
-                inn.pix = item.pix;
-                inn.cash = item.cash;
-                inn.credit = item.credit;
-                inn.debit = item.debit;
-
-                address.street = item.address.street;
-                address.number = item.address.number;
-                address.neighborhood = item.address.neighborhood;
                 address.city = item.address.city;
                 address.state = item.address.state;
-                address.cep = item.address.cep;
 
                 inn.address = address
 
                 this.innList.push(inn)
             })
-            console.log(this.innList);
+        },
+        turnShow(){
+            this.page = 'innShow';
+        },
+        async getInnShow(id){
+            let response = await fetch(`http://localhost:3000/api/v1/inns/${id}`);
+            let data = await response.json();
+            
+            if (data.score == 0) data.score = 'Sem Avaliações';
+            this.inn = data
+            this.address = data.address
+
+            data.pets ? this.innPets = "Sim" : this.innPets = "Não"
+
+            if (data.pix) this.innPaymentMethods.push("Pix");
+            if (data.cash) this.innPaymentMethods.push("Dinheiro");
+            if (data.credit) this.innPaymentMethods.push("Cartão de Crédito");
+            if (data.debit) this.innPaymentMethods.push("Cartão de Débito");
+
+            this.page = 'innShow';
+
         }
     }
 
