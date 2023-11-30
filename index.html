@@ -8,6 +8,7 @@
 <body>
     <h1>Pousadaria</h1>
     <div id="app">
+
         <div v-show="page == 'innIndex'">
             <input type="text" v-model="searchText" placeholder="Buscar">
             <div v-if="listResult.length <= 0">
@@ -25,6 +26,7 @@
                 </li>
             </ul>
         </div>
+
         <div v-show="page == 'innShow'">
             <h2>{{ inn["name"] }}</h2><br>
             <h3>Dados da Pousada</h3>
@@ -59,28 +61,74 @@
             </dl>
             <h3>Quartos</h3>
             <div>
-                <dl v-for="item in roomList">
-                    <dd><strong>Quarto {{ item.number }}</strong></dd>
+                <dl v-for="item, index in roomList">
+                    <dd><a href="#" v-on:click="roomDetails(index)">
+                        Quarto {{ item.number }}</dd>
+                    </a>
                     <dt>Descrição:</dt>
                     <dd>{{ item.description }}</dd>
                     <dt>Capacidade:</dt>
                     <dd>{{ item.capacity }} Hóspedes</dd>
-                    <dt>Dimensão:</dt>
-                    <dd>{{ item.dimension }} m²</dd>
-                    <dt>Banheiros:</dt>
-                    <dd v-if="item.bathrooms == 0"> Banheiro compartilhado </dd>
-                    <dd v-if="item.bathrooms > 0"> {{ item.bathrooms }} </dd>
-                    <dt>Camas:</dt>
-                    <dd v-if="item.double_beds > 0"> {{ item.double_beds }} de Casal </dd>
-                    <dd v-if="item.single_beds > 0"> {{ item.single_beds }} de Solteiro </dd>
-                    <dt>Amenidades:</dt> 
-                    <dd v-for="amenity in item.amenities">{{ amenity }}</dd>
-                    <dt>Acessível para PCD:</dt> 
-                    <dd>{{ item.accessible }} </dd>
-                    <dd></dd>
                 </dl>
             </div>
         </div>
+
+        <div v-show="page == 'roomDetails'">
+            <h2>Quartos {{ room.number }}</h2>
+            <div>
+                <dl>
+                    <dt>Descrição:</dt>
+                    <dd>{{ room.description }}</dd>
+                    <dt>Capacidade:</dt>
+                    <dd>{{ room.capacity }} Hóspedes</dd>
+                    <dt>Dimensão:</dt>
+                    <dd>{{ room.dimension }} m²</dd>
+                    <dt>Banheiros:</dt>
+                    <dd v-if="room.bathrooms == 0"> Banheiro compartilhado </dd>
+                    <dd v-if="room.bathrooms > 0"> {{ room.bathrooms }} </dd>
+                    <dt>Camas:</dt>
+                    <dd v-if="room.double_beds > 0"> {{ room.double_beds }} de Casal </dd>
+                    <dd v-if="room.single_beds > 0"> {{ room.single_beds }} de Solteiro </dd>
+                    <dt>Amenidades:</dt> 
+                    <dd v-for="amenity in room.amenities">{{ amenity }}</dd>
+                    <dt>Acessível para PCD:</dt> 
+                    <dd>{{ room.accessible }} </dd>
+                    <dd></dd>
+                </dl>
+                <button v-on:click="getAvailabilityForm">Checar Disponibilidade</button>
+                <br>
+                <div v-show="availabilityForm">
+                    <br>
+                    <label for="checkIn">Data de Check-in </label>
+                    <input type="date" v-model="checkIn" placeholder="Buscar" id="checkIn">
+                    <br>
+                    <label for="checkOut">Data de Check-out </label>
+                    <input type="date" v-model="checkOut" placeholder="Buscar" id="checkOut">
+                    <br>
+                    <label for="guests">Número de Hóspedes </label>
+                    <input type="number" v-model="guests" placeholder="Buscar" id="guests">
+                    <br>
+                    <input type="submit" v-on:click="getAvailability">
+                </div>
+                <br>
+                <div v-show="available">
+                    Quarto disponível
+                    <br>
+                    Check-in: {{ checkIn }}
+                    <br>
+                    Check-out: {{ checkOut }}
+                    <br>
+                    guests: {{ guests }}
+                    <br>
+                    Total: {{ total }}
+                </div>
+                <div v-show="unavailable">
+                    Quarto indisponível
+                </div>
+
+            </div>
+        </div>
+
     </div>
     <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
     <script src="main.js"></script>

@@ -11,8 +11,16 @@ const app = Vue.createApp({
             innPets: false,
 
             room: new Object(),
-            roomAccessible: false,
             roomList: [],
+
+            availabilityForm: false,
+            available: false,
+            unavailable: false,
+            checkIn: '',
+            checkOut: '',
+            guests: '',
+            total: '',
+            
         }
     },
 
@@ -79,7 +87,6 @@ const app = Vue.createApp({
             let response = await fetch(`http://localhost:3000/api/v1/inns/${id}/rooms`);
             let data = await response.json();
 
-            console.log(data)
             data.forEach(item =>{
                 var room = new Object();
 
@@ -105,6 +112,32 @@ const app = Vue.createApp({
                 this.roomList.push(room)
             }) 
         },
+        async roomDetails(roomIndex){
+            this.room = this.roomList[roomIndex];
+
+            this.page = 'roomDetails';
+        },
+        async getAvailabilityForm(){
+            this.availabilityForm = true
+        },
+        async getAvailability(){
+            let response = await fetch(`http://localhost:3000/api/v1/rooms/${this.room.id}/available/?check_in_date=${this.checkIn}&check_out_date=${this.checkOut}&guests=${this.guests}`);
+            let data = await response.json();
+            console.log(data)
+
+            this.available = false
+            this.unavailable = false
+
+            if (data == {}){
+                this.unavailable = true
+            }else{
+                this.total = data.total
+                this.available = true
+            }
+
+
+        },
+
     }
 
 })
